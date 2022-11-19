@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{ useEffect } from 'react';
 import {
     View,
     Text,
@@ -6,6 +6,15 @@ import {
 } from 'react-native';
 
 const HomeScreen = ({ navigation }) => {
+    
+    useEffect(()=>{
+        //Preventing Back Navigation
+        navigation.addListener('beforeRemove',(e)=>{
+            e.preventDefault();
+        })
+    },[]);
+
+
     return(
         <View style={styles.container}>
             <Text>HomeScreen</Text>

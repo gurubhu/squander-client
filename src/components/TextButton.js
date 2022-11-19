@@ -5,6 +5,8 @@ import {
     StyleSheet
 } from 'react-native';
 
+import Loader from './Loader';
+
 import FONTS from '../constants/FONTS';
 import COLORS from '../constants/COLORS';
 
@@ -15,6 +17,10 @@ const TextButton = ({
     labelStyle,
     onPress
 }) => {
+    
+    if(label === 'Create Account' && disabled) return <Loader />
+    if(label === 'Signin' && disabled) return <Loader />
+    
     return (
         <TouchableOpacity
             style={{
