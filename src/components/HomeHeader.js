@@ -8,9 +8,7 @@ import FONTS from '../constants/FONTS';
 
 import { Context as AuthContext} from '../context/AuthContext';
 
-const HomeHeader = ({name, navigation})=>{
-
-    //console.log(navigation.navigate('Signup'))
+const HomeHeader = ({ name, navigation})=>{
 
     const { signout } = useContext(AuthContext);
 

@@ -1,5 +1,6 @@
 import createDataContext from "./createDataContext";
 import squanderApi from '../api/squander';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const authReducer = (state, action)=>{
     switch(action.type){
@@ -23,6 +24,7 @@ const signup = dispatch =>{
         try{
             const selectedTermsAndCondition = true;
             const response = await squanderApi.post('/signup', { name, email, password, selectedTermsAndCondition});
+            await AsyncStorage.setItem('token', response.data.token);
             dispatch( { type : 'signup' , payload : { token : response.data.token , errorMessage : ''}});
             setIsCreateAccountButtonPressed(false);
             if(callback){
@@ -38,10 +40,10 @@ const signup = dispatch =>{
     }
 }
 
-const signin = dispatch =>{
-    return async ({ email, password, setIsLoginButtonPressed }, callback)=>{
+const signin = dispatch => async ({ email, password, setIsLoginButtonPressed }, callback)=>{
         try{
             const response = await squanderApi.post('/signin', { email, password });
+            await AsyncStorage.setItem('token', response.data.token);
             dispatch( { type : 'signin' , payload : { token : response.data.token , errorMessage : ''}});
             setIsLoginButtonPressed(false);
             if(callback){
@@ -51,8 +53,8 @@ const signin = dispatch =>{
             setIsLoginButtonPressed(false);
             dispatch({ type: 'add_error', payload : { token : null , errorMessage : 'Invalid email or password.'} })
         }
-    }
 }
+
 
 const addError = dispatch => async (errorMessage)=>{
     dispatch({ type : 'add_error', payload : { token : null , errorMessage}})
@@ -63,6 +65,7 @@ const clearErrorMessage = dispatch => ()=>{
 }
 
 const signout = dispatch => async (callback)=>{
+    await AsyncStorage.removeItem('token');
     dispatch({ type : 'signout' });
     if(callback){
         callback();

@@ -7,6 +7,8 @@ const SIZES ={
     h1: 30,
     h2: 22,
     h3: 16,
+    h4: 14,
+    h5: 12,
     radius: 12,
     // app dimensions
     width,

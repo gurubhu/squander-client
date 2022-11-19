@@ -4,6 +4,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import _loadFontsAsync from './CustomFonts';
 
+import ResolveAuthScreen from './src/screens/Authentication/ResolveAuthScreen';
 import WelcomeScreen from './src/screens/Welcome/WelcomeScreen';
 import SignupScreen from './src/screens/Authentication/SignupScreen';
 import SigninScreen from './src/screens/Authentication/SigninScreen';
@@ -17,6 +18,13 @@ const App = ()=>{
   return (
     <NavigationContainer>
       <Stack.Navigator>
+      <Stack.Screen 
+          name="Resolve" 
+          component={ResolveAuthScreen}
+          options={{
+            headerShown : false
+          }}
+        />
         <Stack.Screen 
           name="Welcome" 
           component={WelcomeScreen}
