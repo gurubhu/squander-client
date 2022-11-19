@@ -1,4 +1,4 @@
-import React,{useState, useEffect, useContext} from 'react';
+import React,{useState, useContext} from 'react';
 import {
     View,
     Text,
@@ -10,7 +10,6 @@ import { SimpleLineIcons } from '@expo/vector-icons';
 
 import FormInput from '../../components/FormInput';
 import IconButton from '../../components/IconButton';
-import CheckBox from '../../components/CheckBox';
 import TextButton from '../../components/TextButton';
 
 import SIZES from '../../constants/SIZES';
@@ -23,25 +22,14 @@ import { validateEmail } from '../../constants/Utility';
 import { Context as AuthContext } from '../../context/AuthContext';
 import AuthFooter from '../../components/AuthFooter';
 
-const SignupScreen = ({ navigation }) => {
+const SigninScreen = ({ navigation }) => {
 
-    useEffect(()=>{
-        //Preventing Back Navigation
-        navigation.addListener('beforeRemove',(e)=>{
-            e.preventDefault();
-        })
-    },[]);
+    const { signin, state, addError } = useContext(AuthContext);
 
-    const { signup, state, addError } = useContext(AuthContext);
-
-    const [name, setName] = useState("");
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [isPasswordVisible, setIsPasswordVisible] = useState(false)
-    const [confirmPassword, setConfirmPassword] = useState("")
-    const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] = useState(false)
-    const [termsChecked, setTermsChecked] = useState(false)
-    const [isCreateAccountButtonPressed, setIsCreateAccountButtonPressed] = useState(false);
+    const [isLoginButtonPressed, setIsLoginButtonPressed] = useState(false);
 
     //console.log(state);
 
@@ -56,26 +44,9 @@ const SignupScreen = ({ navigation }) => {
             />
             <View style={{...styles.formContainer, ...styles.shadow}}>
                 <Text style={styles.text}>
-                    Create New Account
+                    Sign In To Squander
                 </Text>
-                {<Text style={styles.error}>{state.errorMessage}</Text>} 
-                {/* Name */}
-                <FormInput
-                    containerStyle={styles.containerStyle}
-                    placeholder="Name"
-                    value={name}
-                    onChange={(text)=> {
-                        addError('')
-                        setName(text)
-                    }}
-                    prependComponent={
-                        <Image 
-                            source={icons.person}
-                            style={styles.icon}
-                        />
-                    }
-                    maxLength={20}
-                />    
+                {<Text style={styles.error}>{state.errorMessage}</Text>}  
                 {/* Email */}
                 <FormInput 
                     containerStyle={styles.containerStyle}
@@ -119,74 +90,30 @@ const SignupScreen = ({ navigation }) => {
                         />
                     }
                     maxLength={16}
-                />        
-                {/* Confirm Password */}
-                <FormInput 
-                    containerStyle={styles.containerStyle}
-                    placeholder="Confirm Password"
-                    value={confirmPassword}
-                    secureTextEntry={!isConfirmPasswordVisible}
-                    onChange={(text)=> {
-                        addError('')
-                        setConfirmPassword(text)
-                    }}
-                    prependComponent={
-                        <Image 
-                            source={icons.lock}
-                            style={styles.icon}
-                        />
-                    }
-                    appendComponent={
-                        <IconButton 
-                            icon={ isConfirmPasswordVisible ? icons.eye_off : icons.eye}
-                            iconStyle={{
-                                tintColor : COLORS.primary
-                            }}
-                            onPress={()=>setIsConfirmPasswordVisible(!isConfirmPasswordVisible)}
-                        />
-                    }
-                    maxLength={16}
-                />                        
-                {/* Terms And Conditions */}
-                <CheckBox 
-                    containerStyle={styles.checkboxContainer}
-                    isSelected={termsChecked}
-                    onPress={()=> {
-                        addError('')
-                        setTermsChecked(!termsChecked)
-                    }}
                 />
-                {/* Create Account Button */}
+                {/* Signin Button */}
                 <TextButton 
-                    label="Create Account"
+                    label="Signin"
                     contentContainerStyle={styles.buttonContainer}
                     labelStyle={{
                         ...FONTS.h3
                     }}
-                    disabled={isCreateAccountButtonPressed}
+                    disabled={isLoginButtonPressed}
                     onPress={()=> {
-                        if(!name || name==='') return addError('Please Enter Your Name');
                         if(!email) return addError('Please Enter Your Email');
                         if(!validateEmail(email)) return addError('Entered Email Is Invalid');
-                        if(!password) return addError('Please Enter Your Password');  
-                        if(!confirmPassword) return addError('Please Enter Your Confirm Password');
-                        if(password !== confirmPassword) return addError('Password and Confirm Password are different');
-                        if(!termsChecked) return addError('Please select Terms and Conditions.');
-                        setIsCreateAccountButtonPressed(true);
-                        signup({name, email, password, setIsCreateAccountButtonPressed}, ()=> {
-                            setName('');
+                        if(!password) return addError('Please Enter Your Password');
+                        setIsLoginButtonPressed(true);
+                        signin({email, password, setIsLoginButtonPressed}, ()=> {
                             setEmail('');
                             setPassword('')
-                            setConfirmPassword('');
-                            setTermsChecked(false);
                             navigation.navigate('Home')
                         });
                     }}
                 />  
             </View>
             {/* Auth Container Footer */}
-            {/* <AuthFooterSignup  navigation={navigation}/> */}
-            <AuthFooter navigation={navigation} navigationText="Signin"/>    
+            <AuthFooter navigation={navigation} navigationText="Signup"/> 
         </View>
     )
 }
@@ -206,7 +133,7 @@ const styles = StyleSheet.create({
     },
     formContainer :{
         marginTop : SIZES.padding,
-        height : SIZES.height * 0.75,
+        height : SIZES.height * 0.55,
         width : SIZES.width - (SIZES.padding * 2),
         padding : SIZES.padding,
         borderRadius : SIZES.radius * 2,
@@ -249,6 +176,7 @@ const styles = StyleSheet.create({
         marginBottom: SIZES.radius * 3
     },
     buttonContainer:{
+        marginTop: 80,
         height: 55,
         borderRadius: SIZES.radius,
         backgroundColor: COLORS.primary
@@ -260,4 +188,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default SignupScreen;
+export default SigninScreen;

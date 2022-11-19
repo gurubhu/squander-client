@@ -56,7 +56,8 @@ const styles = StyleSheet.create({
         flex :1,
         marginLeft : SIZES.base,
         ...FONTS.body5,
-        lineHeight : 20
+        lineHeight : 20,
+        color : COLORS.support3
     }
 });
 

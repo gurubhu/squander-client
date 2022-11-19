@@ -6,7 +6,10 @@ import _loadFontsAsync from './CustomFonts';
 
 import WelcomeScreen from './src/screens/Welcome/WelcomeScreen';
 import SignupScreen from './src/screens/Authentication/SignupScreen';
+import SigninScreen from './src/screens/Authentication/SigninScreen';
 import HomeScreen from './src/screens/Home/HomeScreen';
+
+import { Provider as AuthProvider } from './src/context/AuthContext';
 
 const Stack = createNativeStackNavigator();
 
@@ -17,6 +20,13 @@ const App = ()=>{
         <Stack.Screen 
           name="Welcome" 
           component={WelcomeScreen}
+          options={{
+            headerShown : false
+          }}
+        />
+        <Stack.Screen 
+          name="Signin" 
+          component={SigninScreen}
           options={{
             headerShown : false
           }}
@@ -53,6 +63,8 @@ export default ()=>{
   }
 
   return (
-    <App />
+    <AuthProvider>
+      <App />
+    </AuthProvider>
   )
 }
