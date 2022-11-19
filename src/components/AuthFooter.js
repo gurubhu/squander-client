@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext} from 'react';
 import {
     Text,
     StyleSheet,
@@ -13,32 +13,21 @@ import SIZES from '../constants/SIZES';
 
 import { Context as AuthContext} from '../context/AuthContext';
 
-const AuthFooter = ({ navigation })=>{
-
-    const [mode, setMode] = useState("signup")
+const AuthFooter = ({ navigation, navigationText })=>{
     
     const { clearErrorMessage } = useContext(AuthContext);
-
-    console.log(mode);
 
     return (
         <View style={styles.container}>
             <Text style={styles.text}>
-                { mode === 'signin' ? "Don't have an account?" : "I already have an account."}
+                { navigationText === 'Signup' ? "Don't have an account?" : "I already have an account."}
             </Text>
             <TextButton 
-               label={mode === 'signin' ? "Create New Account": "Sign In"}
+               label={navigationText === 'Signup' ? "Sign Up": "Sign In"}
                contentContainerStyle={styles.contentContainerStyle}
                labelStyle={styles.labelStyle}
                onPress={()=> {
-                   //mode === 'signin' ? setMode('signup'): setMode('signin')
-                   if(mode == 'signup'){
-                       navigation.navigate('Signin')
-                       setMode('signin')
-                   }else{
-                        navigation.navigate('Signup')
-                        setMode('signup')
-                   }
+                    navigationText === 'Signin' ? navigation.navigate('Signin') : navigation.navigate('Signup')
                    clearErrorMessage()
                 }}
             />
@@ -49,10 +38,9 @@ const AuthFooter = ({ navigation })=>{
 const styles = StyleSheet.create({
     container : {
         flexDirection : 'row',
-        height : 80,
         alignItems: 'flex-end',
         justifyContent : 'center',
-        marginTop : -30,
+        marginTop : 20,
         marginHorizontal: SIZES.radius,
         paddingBottom : SIZES.radius,
         borderBottomLeftRadius : SIZES.radius,

@@ -1,4 +1,4 @@
-import React,{useState, useEffect, useContext} from 'react';
+import React,{useState, useContext} from 'react';
 import {
     View,
     Text,
@@ -11,7 +11,6 @@ import { SimpleLineIcons } from '@expo/vector-icons';
 import FormInput from '../../components/FormInput';
 import IconButton from '../../components/IconButton';
 import TextButton from '../../components/TextButton';
-import AuthFooterSignin from '../../components/AuthFooterSignin';
 
 import SIZES from '../../constants/SIZES';
 import COLORS from '../../constants/COLORS';
@@ -21,6 +20,7 @@ import icons from '../../constants/icons';
 import { validateEmail } from '../../constants/Utility';
 
 import { Context as AuthContext } from '../../context/AuthContext';
+import AuthFooter from '../../components/AuthFooter';
 
 const SigninScreen = ({ navigation }) => {
 
@@ -104,12 +104,16 @@ const SigninScreen = ({ navigation }) => {
                         if(!validateEmail(email)) return addError('Entered Email Is Invalid');
                         if(!password) return addError('Please Enter Your Password');
                         setIsLoginButtonPressed(true);
-                        signin({email, password, navigation, setIsLoginButtonPressed});
+                        signin({email, password, setIsLoginButtonPressed}, ()=> {
+                            setEmail('');
+                            setPassword('')
+                            navigation.navigate('Home')
+                        });
                     }}
                 />  
             </View>
             {/* Auth Container Footer */}
-            <AuthFooterSignin navigation={navigation}/>
+            <AuthFooter navigation={navigation} navigationText="Signup"/> 
         </View>
     )
 }

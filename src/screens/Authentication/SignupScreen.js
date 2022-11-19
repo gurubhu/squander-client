@@ -12,7 +12,6 @@ import FormInput from '../../components/FormInput';
 import IconButton from '../../components/IconButton';
 import CheckBox from '../../components/CheckBox';
 import TextButton from '../../components/TextButton';
-import AuthFooterSignup from '../../components/AuthFooterSignup';
 
 import SIZES from '../../constants/SIZES';
 import COLORS from '../../constants/COLORS';
@@ -22,6 +21,7 @@ import icons from '../../constants/icons';
 import { validateEmail } from '../../constants/Utility';
 
 import { Context as AuthContext } from '../../context/AuthContext';
+import AuthFooter from '../../components/AuthFooter';
 
 const SignupScreen = ({ navigation }) => {
 
@@ -173,12 +173,20 @@ const SignupScreen = ({ navigation }) => {
                         if(password !== confirmPassword) return addError('Password and Confirm Password are different');
                         if(!termsChecked) return addError('Please select Terms and Conditions.');
                         setIsCreateAccountButtonPressed(true);
-                        signup({name, email, password, navigation, setIsCreateAccountButtonPressed});
+                        signup({name, email, password, setIsCreateAccountButtonPressed}, ()=> {
+                            setName('');
+                            setEmail('');
+                            setPassword('')
+                            setConfirmPassword('');
+                            setTermsChecked(false);
+                            navigation.navigate('Home')
+                        });
                     }}
                 />  
             </View>
             {/* Auth Container Footer */}
-            <AuthFooterSignup  navigation={navigation}/>           
+            {/* <AuthFooterSignup  navigation={navigation}/> */}
+            <AuthFooter navigation={navigation} navigationText="Signin"/>    
         </View>
     )
 }

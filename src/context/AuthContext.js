@@ -7,6 +7,8 @@ const authReducer = (state, action)=>{
             return action.payload;
         case 'signup':
             return action.payload;
+        case 'signout':
+            return { token : null, errorMessage : ''};
         case 'add_error':
                 return action.payload;
         case 'clear_error_message':
@@ -17,12 +19,15 @@ const authReducer = (state, action)=>{
 }
 
 const signup = dispatch =>{
-    return async ({ name, email, password, navigation, setIsCreateAccountButtonPressed })=>{
+    return async ({ name, email, password, setIsCreateAccountButtonPressed }, callback)=>{
         try{
             const selectedTermsAndCondition = true;
             const response = await squanderApi.post('/signup', { name, email, password, selectedTermsAndCondition});
             dispatch( { type : 'signup' , payload : { token : response.data.token , errorMessage : ''}});
-            navigation.navigate('Home');
+            setIsCreateAccountButtonPressed(false);
+            if(callback){
+                callback();
+            }
         }catch(error){
             setIsCreateAccountButtonPressed(false);
             if(error.message.toString().includes('422'))
@@ -34,11 +39,14 @@ const signup = dispatch =>{
 }
 
 const signin = dispatch =>{
-    return async ({ email, password, navigation, setIsLoginButtonPressed })=>{
+    return async ({ email, password, setIsLoginButtonPressed }, callback)=>{
         try{
             const response = await squanderApi.post('/signin', { email, password });
             dispatch( { type : 'signin' , payload : { token : response.data.token , errorMessage : ''}});
-            navigation.navigate('Home');
+            setIsLoginButtonPressed(false);
+            if(callback){
+                callback();
+            }
         }catch(error){
             setIsLoginButtonPressed(false);
             dispatch({ type: 'add_error', payload : { token : null , errorMessage : 'Invalid email or password.'} })
@@ -54,8 +62,15 @@ const clearErrorMessage = dispatch => ()=>{
     dispatch({ type : 'clear_error_message' })
 }
 
+const signout = dispatch => async (callback)=>{
+    dispatch({ type : 'signout' });
+    if(callback){
+        callback();
+    }
+}
+
 export const { Context, Provider} = createDataContext(
     authReducer,  
-    { signup, addError, clearErrorMessage, signin }, 
+    { signup, addError, clearErrorMessage, signin, signout }, 
     { token : null, errorMessage : ''}
 );
